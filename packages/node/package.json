@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc && resolve-tspaths",
+    "start:dev": "npm run build && npm run start",
     "dev": "nodemon src/index.ts"
   },
   "keywords": [],

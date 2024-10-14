@@ -19,28 +19,12 @@ export default class Client {
   async init() {
     await this.LoadHandlers();
 
-    this.app.all("*", async (req: FastifyRequest, res: FastifyReply) => {
-      const route = this.handler.get(req.url);
-
-      if (route) {
-        if (req.method === "GET") {
-          route.GET(req, res);
-        } else if (req.method === "POST") {
-          route.POST(req, res);
-        } else if (req.method === "PUT") {
-          route.PUT(req, res);
-        } else if (req.method === "PATCH") {
-          route.PATCH(req, res);
-        } else if (req.method === "DELETE") {
-          route.DELETE(req, res);
-        }
-      } else {
-        res.status(404).send({
-          error: "Not Found",
-          message: "Route not found",
-        });
-      }
+    this.app.setNotFoundHandler((req, res) => {
+      res
+        .status(404)
+        .send({ data: { message: "Route not found" }, success: false });
     });
+
     this.app.listen({ port: 8080 }, () => {
       console.log("Listening on port 8080 - http://localhost:8080");
     });
@@ -53,16 +37,51 @@ export default class Client {
 
     files.map(async (file) => {
       const route: Route = new (await import(file)).default(this.app);
-
-      console.log(
-        `Loaded ${file.replaceAll("\\", "/").replaceAll("/index.js", "").split("routes")[1] || "/"}`
-      );
-      this.handler.set(
+      const formattedRoute =
         file
           .replaceAll("\\", "/")
           .replaceAll("/index.js", "")
-          .split("routes")[1] || "/",
-        route
+          .split("routes")[1]
+          .replaceAll("[", ":") || "/";
+
+      console.log(`Loaded ${formattedRoute}`);
+      this.handler.set(formattedRoute, route);
+
+      this.app.all(
+        formattedRoute,
+        async (req: FastifyRequest, res: FastifyReply) => {
+          if (req.method === "GET") {
+            route.GET(req, res) ||
+              route.execute(req, res) ||
+              res
+                .status(404)
+                .send({ data: { message: "Route not found" }, success: false });
+          } else if (req.method === "POST") {
+            route.POST(req, res) ||
+              route.execute(req, res) ||
+              res
+                .status(404)
+                .send({ data: { message: "Route not found" }, success: false });
+          } else if (req.method === "PUT") {
+            route.PUT(req, res) ||
+              route.execute(req, res) ||
+              res
+                .status(404)
+                .send({ data: { message: "Route not found" }, success: false });
+          } else if (req.method === "PATCH") {
+            route.PATCH(req, res) ||
+              route.execute(req, res) ||
+              res
+                .status(404)
+                .send({ data: { message: "Route not found" }, success: false });
+          } else if (req.method === "DELETE") {
+            route.DELETE(req, res) ||
+              route.execute(req, res) ||
+              res
+                .status(404)
+                .send({ data: { message: "Route not found" }, success: false });
+          }
+        }
       );
     });
   }
@@ -82,34 +101,23 @@ export class Route {
     this.description = options?.description;
   }
 
-  GET(req: FastifyRequest, res: FastifyReply): void {
-    res.status(405).send({
-      error: "Method Not Allowed",
-      message: "Method not allowed",
-    });
+  GET(req: FastifyRequest, res: FastifyReply): false | void {
+    return false;
   }
-  POST(req: FastifyRequest, res: FastifyReply): void {
-    res.status(405).send({
-      error: "Method Not Allowed",
-      message: "Method not allowed",
-    });
+  POST(req: FastifyRequest, res: FastifyReply): false | void {
+    return false;
   }
-  PUT(req: FastifyRequest, res: FastifyReply): void {
-    res.status(405).send({
-      error: "Method Not Allowed",
-      message: "Method not allowed",
-    });
+  PUT(req: FastifyRequest, res: FastifyReply): false | void {
+    return false;
   }
-  PATCH(req: FastifyRequest, res: FastifyReply): void {
-    res.status(405).send({
-      error: "Method Not Allowed",
-      message: "Method not allowed",
-    });
+  PATCH(req: FastifyRequest, res: FastifyReply): false | void {
+    return false;
   }
-  DELETE(req: FastifyRequest, res: FastifyReply): void {
-    res.status(405).send({
-      error: "Method Not Allowed",
-      message: "Method not allowed",
-    });
+  DELETE(req: FastifyRequest, res: FastifyReply): false | void {
+    return false;
+  }
+
+  execute(req: FastifyRequest, res: FastifyReply): false | void {
+    return false;
   }
 }
