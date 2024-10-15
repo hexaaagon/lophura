@@ -8,7 +8,7 @@ export default class Index extends Route {
     this.app = app;
   }
 
-  POST(req: FastifyRequest, res: FastifyReply): void {
+  GET(req: FastifyRequest, res: FastifyReply): void {
     res.status(200).send({
       message: "Hello world",
     });

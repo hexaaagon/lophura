@@ -1,7 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import Client, { Route } from "@/handler/Client";
+import { getAllSystemInfo } from "@/utils/systemInfo";
 
-export default class Index extends Route {
+export default class Info extends Route {
   app: Client;
   constructor(app: Client) {
     super(app);
@@ -10,7 +11,8 @@ export default class Index extends Route {
 
   execute(req: FastifyRequest, res: FastifyReply): void {
     res.status(200).send({
-      message: "Hello world",
+      data: getAllSystemInfo(),
+      success: true,
     });
   }
 }
