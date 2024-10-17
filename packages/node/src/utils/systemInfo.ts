@@ -38,19 +38,6 @@ export function getAllSystemInfo() {
       machineType = platform;
   }
 
-  const systemInfo = {
-    osType: os.type(),
-    osRelease: os.release(),
-    osPlatform: machineType,
-    osArch: os.arch(),
-    cpuCores: os.cpus().length,
-    cpuModel: os.cpus()[0].model,
-    totalMemory: prettyBytes(os.totalmem()),
-    freeMemory: prettyBytes(os.freemem()),
-    systemUptime: secondsToHms(os.uptime()),
-    loadAverage: os.loadavg(),
-  };
-
   const getDiskUsageRaw = ():
     | { total: number; used: number; available: number }
     | string => {
@@ -83,9 +70,54 @@ export function getAllSystemInfo() {
     };
   }
 
+  const calculateCpuUsage = (): number => {
+    const cpus = os.cpus();
+
+    const getTotalCpuTime = (cpu: os.CpuInfo) => {
+      const times = cpu.times;
+      return times.user + times.nice + times.sys + times.irq + times.idle;
+    };
+
+    const startCpuTimes = cpus.map(getTotalCpuTime);
+    const startIdleTimes = cpus.map((cpu) => cpu.times.idle);
+
+    // Calculate over a 100ms interval
+    const delay = 100; // 100 milliseconds
+    const start = Date.now();
+    while (Date.now() - start < delay) {}
+
+    const endCpuTimes = os.cpus().map(getTotalCpuTime);
+    const endIdleTimes = os.cpus().map((cpu) => cpu.times.idle);
+
+    let totalCpuDiff = 0;
+    let totalIdleDiff = 0;
+
+    for (let i = 0; i < cpus.length; i++) {
+      totalCpuDiff += endCpuTimes[i] - startCpuTimes[i];
+      totalIdleDiff += endIdleTimes[i] - startIdleTimes[i];
+    }
+
+    const cpuUsage = (1 - totalIdleDiff / totalCpuDiff) * 100;
+    return parseFloat(cpuUsage.toFixed(2)); // Return CPU usage percentage with two decimal places
+  };
+
+  const systemInfo = {
+    osType: os.type(),
+    osRelease: os.release(),
+    osPlatform: machineType,
+    osArch: os.arch(),
+    cpuUsage: calculateCpuUsage(),
+    cpuCores: os.cpus().length,
+    cpuModel: os.cpus()[0].model,
+    totalMemory: prettyBytes(os.totalmem()),
+    freeMemory: prettyBytes(os.freemem()),
+    systemUptime: secondsToHms(os.uptime()),
+    loadAverage: os.loadavg(),
+    diskInfo,
+  };
+
   return {
     nodeInfo,
     systemInfo,
-    diskInfo,
   };
 }

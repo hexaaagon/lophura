@@ -6,6 +6,8 @@ import fastify, {
 } from "fastify";
 import { glob } from "glob";
 import path from "path";
+import chalk from "chalk";
+import { getAllSystemInfo } from "@/utils/systemInfo";
 
 export default class Client {
   app: FastifyInstance;
@@ -17,6 +19,7 @@ export default class Client {
   }
 
   async init() {
+    await this.LoadTerminal();
     await this.LoadHandlers();
 
     this.app.setNotFoundHandler((req, res) => {
@@ -28,6 +31,31 @@ export default class Client {
     this.app.listen({ port: 8080 }, () => {
       console.log("Listening on port 8080 - http://localhost:8080");
     });
+  }
+
+  async LoadTerminal() {
+    const info = getAllSystemInfo();
+
+    console.log(
+      chalk.green(`                           /$$          
+                          | $$          
+ /lophura   /$$$$$$   /$$$$$$$  /$$$$$$ 
+| $$__  $$ /$$__  $$ /$$__  $$ /$$__  $$
+| $$  \\ $$| $$  \\ $$| $$  | $$| $$$$$$$$
+| $$  | $$| $$  | $$| $$  | $$| $$_____/
+| $$  | $$|  $$$$$$/|  $$$$$$$|  $$$$$$$
+|__/  |__/ \\______/  \\_______/ \\_______/
+`)
+    );
+
+    console.log(
+      chalk.blue(
+        `${info.systemInfo.diskInfo.formatted?.used}/${info.systemInfo.diskInfo.formatted?.total}`
+      ) +
+        chalk.white(" Disk - ") +
+        chalk.blue(`${info.systemInfo.cpuUsage}%`) +
+        chalk.white(" CPU Usage")
+    );
   }
 
   async LoadHandlers() {
