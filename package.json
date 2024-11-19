@@ -1,20 +1,16 @@
 {
   "name": "lophura",
-  "version": "0.1.0",
-  "description": "an open-source web file managers for server.",
+  "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
-  "keywords": [],
-  "author": "Hexaa Scoooolzs",
-  "license": "Apache-2.0",
   "devDependencies": {
     "prettier": "^3.2.5",
-    "turbo": "^2.1.3",
-    "typescript": "^5.4.5"
+    "turbo": "^2.3.0",
+    "typescript": "5.5.4"
   },
   "packageManager": "pnpm@8.15.6",
   "engines": {
