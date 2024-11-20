@@ -6,18 +6,28 @@
     "start": "node -r dotenv/config dist/server.mjs",
     "build": "npm run build-server && npm run build-next",
     "build-server": "tsx esbuild.config.ts",
-    "build-next": "next build"
+    "build-next": "next build",
+    "migration:generate": "drizzle-kit generate --config ./src/server/db/drizzle.config.ts",
+    "migration:migrate": "drizzle-kit migrate --config ./src/server/db/drizzle.config.ts",
+    "migration:push": "drizzle-kit push --config ./src/server/db/drizzle.config.ts",
+    "migration:up": "drizzle-kit up --config ./src/server/db/drizzle.config.ts",
+    "migration:drop": "drizzle-kit drop --config ./src/server/db/drizzle.config.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.14.0",
+    "cron": "^3.2.1",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.3",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
+    "@lophura/server": "workspace:*",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.28.1",
     "esbuild": "^0.24.0",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",

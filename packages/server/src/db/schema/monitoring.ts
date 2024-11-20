@@ -12,10 +12,6 @@ export const monitoring = sqliteTable("monitoring", {
   createdAt: text("createdAt")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
-  id: text("id")
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => nanoid()),
   diskUsage: integer("diskUsage").notNull(),
   memoryUsage: integer("memoryUsage").notNull(),
   cpuUsage: integer("cpuUsage").notNull(),
@@ -25,7 +21,6 @@ export const monitoring = sqliteTable("monitoring", {
 
 const createSchema = createInsertSchema(monitoring, {
   createdAt: z.date(),
-  id: z.string(),
   diskUsage: z.number(),
   memoryUsage: z.number(),
   cpuUsage: z.number(),
@@ -40,12 +35,6 @@ export const apiCreateMonitoring = createSchema
     cpuUsage: true,
     // networkIn: true,
     // networkOut: true,
-  })
-  .required();
-
-export const apiFindIDMonitoring = createSchema
-  .pick({
-    id: true,
   })
   .required();
 

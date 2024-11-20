@@ -1,10 +1,21 @@
 {
   "name": "@lophura/server",
   "version": "1.0.0",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./*": {
+      "import": "./dist/*",
+      "require": "./dist/*.cjs"
+    },
+    "./dist": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    }
   },
   "scripts": {
     "build": "npm run switch:prod && rm -rf ./dist && tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",

@@ -3,6 +3,7 @@ import { createClient } from "@libsql/client";
 import * as schema from "./schema";
 
 declare global {
+  // eslint-disable-next-line no-var
   var db: LibSQLDatabase<typeof schema> | undefined;
 }
 

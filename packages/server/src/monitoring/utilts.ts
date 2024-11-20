@@ -18,11 +18,11 @@ export async function recordStats() {
 }
 
 async function calculateDisk() {
-  return formatBytesToBytes(+(await osUtils.drive.used("/")), "GB");
+  return formatBytesToBytes(+(await osUtils.drive.info("/")).usedGb, "GB");
 }
 
 async function calculateMemory() {
-  return formatBytesToBytes(+(await osUtils.mem.used()), "MB");
+  return formatBytesToBytes(+(await osUtils.mem.info()).usedMemMb, "MB");
 }
 
 async function calculateCpu() {

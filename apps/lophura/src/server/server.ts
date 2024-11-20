@@ -1,6 +1,7 @@
 import http from "node:http";
 import { config } from "dotenv";
 import next from "next";
+import { initializeSchedules } from "./schedules";
 
 config({ path: ".env" });
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
@@ -13,6 +14,8 @@ void app.prepare().then(async () => {
     const server = http.createServer((req, res) => {
       handle(req, res);
     });
+
+    initializeSchedules();
 
     server.listen(PORT);
     console.log("Server listening on port", PORT);
