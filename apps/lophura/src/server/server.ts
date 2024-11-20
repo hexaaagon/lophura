@@ -18,7 +18,7 @@ void app.prepare().then(async () => {
     initializeSchedules();
 
     server.listen(PORT);
-    console.log("Server listening on port", PORT);
+    console.log(`> Ready on http://localhost:${PORT}`);
   } catch (e) {
     console.error("Main server error", e);
   }

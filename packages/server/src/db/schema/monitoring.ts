@@ -1,17 +1,14 @@
-import {
-  integer,
-  sqliteTable,
-  text,
-  SQLiteTextJsonBuilder,
-} from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 
 export const monitoring = sqliteTable("monitoring", {
-  createdAt: text("createdAt")
+  createdAt: integer("createdAt", {
+    mode: "timestamp",
+  })
     .notNull()
-    .$defaultFn(() => new Date().toISOString()),
+    .$defaultFn(() => new Date()),
   diskUsage: integer("diskUsage").notNull(),
   memoryUsage: integer("memoryUsage").notNull(),
   cpuUsage: integer("cpuUsage").notNull(),
@@ -20,7 +17,7 @@ export const monitoring = sqliteTable("monitoring", {
 });
 
 const createSchema = createInsertSchema(monitoring, {
-  createdAt: z.date(),
+  createdAt: z.string(),
   diskUsage: z.number(),
   memoryUsage: z.number(),
   cpuUsage: z.number(),

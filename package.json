@@ -6,9 +6,10 @@
     "packages/*"
   ],
   "scripts": {
+    "lophura:start": "pnpm --filter=lophura run start",
+    "lophura:build": "pnpm --filter=lophura run build",
+    "server:build": "pnpm --filter=@lophura/server run build",
     "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
