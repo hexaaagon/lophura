@@ -1,6 +1,5 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
-import { nanoid } from "nanoid";
 import { z } from "zod";
 
 export const monitoring = sqliteTable("monitoring", {
