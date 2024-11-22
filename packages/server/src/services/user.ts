@@ -1,6 +1,6 @@
 "use server";
 import { db } from "../db";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt-edge";
 import { apiCreateUser, users, DatabaseUser, zRoles } from "../db/schema";
 import { ServiceData } from "../utils/types";
 import { eq } from "drizzle-orm";
@@ -9,7 +9,7 @@ export async function createUser(
   input: typeof apiCreateUser._type
 ): Promise<ServiceData<DatabaseUser>> {
   return await db.transaction(async (tx) => {
-    const hashedPassword = await bcrypt.hash(input.password, 10);
+    const hashedPassword = bcrypt.hashSync(input.password, 10);
     const newUser = await tx
       .insert(users)
       .values({

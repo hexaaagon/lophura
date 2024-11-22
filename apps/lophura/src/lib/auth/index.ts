@@ -1,5 +1,5 @@
 "use server";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt-edge";
 import { apiCreateUser, apiLogin, DatabaseUser } from "@/server/db/schema";
 import {
   lucia,
@@ -11,6 +11,7 @@ import {
 import { cookies } from "next/headers";
 
 export * from "./schema";
+export * from "./middleware";
 
 export async function createUser(input: typeof apiCreateUser._type) {
   try {

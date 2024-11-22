@@ -1,10 +1,11 @@
+import { AuthMiddleware } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export type middlewareFunc = (
   req: NextRequest,
   res: NextResponse
 ) => NextResponse | Promise<NextResponse>;
-const middlewares: Array<middlewareFunc> = [];
+const middlewares: Array<middlewareFunc> = [AuthMiddleware];
 
 export default async function createMiddleware(
   req: NextRequest,
