@@ -38,7 +38,6 @@ COPY --from=build /prod/lophura/next.config.mjs ./next.config.mjs
 COPY --from=build /prod/lophura/public ./public
 COPY --from=build /prod/lophura/package.json ./package.json
 COPY --from=build /prod/lophura/src/lib/db/migrations ./src/lib/db/migrations
-COPY .env.production ./.env
 COPY --from=build /prod/lophura/components.json ./components.json
 COPY --from=build /prod/lophura/node_modules ./node_modules
 
