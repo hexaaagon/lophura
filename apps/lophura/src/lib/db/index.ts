@@ -4,5 +4,5 @@ import { config } from "dotenv";
 
 config({ path: "../../.env" });
 
-export const sqlite = new Database(process.env.DATABASE_URL);
+export const sqlite = new Database("lophura.db");
 export const db: BetterSQLite3Database = drizzle(sqlite);

@@ -5,10 +5,6 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import Database from "better-sqlite3";
 
 const runMigrate = async () => {
-  if (!env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not defined");
-  }
-
   const sqlite = new Database("lophura.db");
   const db: BetterSQLite3Database = drizzle(sqlite);
 

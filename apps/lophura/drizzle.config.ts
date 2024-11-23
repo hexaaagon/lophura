@@ -6,6 +6,6 @@ export default {
   dialect: "sqlite",
   out: "./src/lib/db/migrations",
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url: "lophura.db",
   },
 } satisfies Config;
