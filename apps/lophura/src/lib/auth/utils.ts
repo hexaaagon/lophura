@@ -32,7 +32,7 @@ export const getUserAuth = async (): Promise<AuthSession> => {
 
 export const checkAuth = async () => {
   const { session } = await validateRequest();
-  if (!session) redirect("/sign-in");
+  if (!session) redirect("/");
 };
 
 export const genericError = { error: "Error, please try again." };

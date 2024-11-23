@@ -102,7 +102,7 @@ export async function signOutAction(): Promise<ActionResult> {
 
   const sessionCookie = lucia.createBlankSessionCookie();
   await setAuthCookie(sessionCookie);
-  redirect("/sign-in");
+  redirect("/");
 }
 
 export async function updateUser(
