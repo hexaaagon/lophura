@@ -9,6 +9,7 @@
     "lophura:start": "pnpm --filter=lophura run start",
     "lophura:build": "pnpm --filter=lophura run build",
     "server:build": "pnpm --filter=@lophura/server run build",
+    "start": "pnpm --filter=lophura run start",
     "build": "turbo build",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
