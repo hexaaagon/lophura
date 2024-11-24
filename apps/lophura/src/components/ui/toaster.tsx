@@ -1,6 +1,7 @@
 "use client";
 
-import { useToast } from "@/components/hooks/use-toast";
+import { CircleAlert, MessageCircleWarningIcon } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import {
   Toast,
   ToastClose,
@@ -21,7 +22,10 @@ export function Toaster() {
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
-                <ToastDescription>{description}</ToastDescription>
+                <ToastDescription className="flex items-center gap-1">
+                  {props.variant === "destructive" && <CircleAlert />}{" "}
+                  {description}
+                </ToastDescription>
               )}
             </div>
             {action}

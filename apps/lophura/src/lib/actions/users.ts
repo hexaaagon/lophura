@@ -1,32 +1,41 @@
 "use server";
 
+import { api } from "../trpc/api";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { Argon2id } from "oslo/password";
 import { lucia, validateRequest } from "../auth/lucia";
-import { generateId } from "lucia";
+import { nanoid } from "@/lib/utils";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/index";
 
 import {
   genericError,
   setAuthCookie,
-  validateAuthFormData,
+  validateAuthLoginFormData,
   getUserAuth,
+  validateAuthRegisterFormData,
 } from "../auth/utils";
-import { users, updateUserSchema } from "../db/schema/auth";
+import { users, updateUserSchema } from "../db/schema";
 
-interface ActionResult {
-  error: string;
-}
+type ActionResult =
+  | {
+      success: true;
+      data: {
+        type: "redirect";
+        path: string;
+      };
+    }
+  | { success: false; error: string };
 
 export async function signInAction(
   _: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  const { data, error } = validateAuthFormData(formData);
-  if (error !== null) return { error };
+  const { data, error } = validateAuthLoginFormData(formData);
+  if (error !== null) return { success: false, error };
 
   try {
     const [existingUser] = await db
@@ -35,6 +44,7 @@ export async function signInAction(
       .where(eq(users.email, data.email.toLowerCase()));
     if (!existingUser) {
       return {
+        success: false,
         error: "Incorrect username or password",
       };
     }
@@ -45,6 +55,7 @@ export async function signInAction(
     );
     if (!validPassword) {
       return {
+        success: false,
         error: "Incorrect username or password",
       };
     }
@@ -53,11 +64,11 @@ export async function signInAction(
     const sessionCookie = lucia.createSessionCookie(session.id);
     await setAuthCookie(sessionCookie);
 
-    return redirect("/dashboard");
+    return { success: true, data: { type: "redirect", path: "/dashboard" } };
   } catch (e) {
     console.error(1, e);
 
-    return genericError;
+    return genericError(e);
   }
 }
 
@@ -65,12 +76,20 @@ export async function signUpAction(
   _: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  const { data, error } = validateAuthFormData(formData);
+  const { data, error } = validateAuthRegisterFormData(formData);
+  if (error !== null) return { success: false, error };
 
-  if (error !== null) return { error };
+  const isFirstInstall = (await api.auth.getUserCount.query()) === 0;
+  if (!isFirstInstall) {
+    return {
+      success: false,
+      error:
+        "You have already signed up, please contact admin to create a new account.",
+    };
+  }
 
   const hashedPassword = await new Argon2id().hash(data.password);
-  const userId = generateId(15);
+  const userId = nanoid(15);
 
   try {
     await db.insert(users).values({
@@ -81,21 +100,19 @@ export async function signUpAction(
   } catch (e) {
     console.error(2, e);
 
-    return genericError;
+    return genericError(e);
   }
 
   const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
   await setAuthCookie(sessionCookie);
-  return redirect("/dashboard");
+  return { success: true, data: { type: "redirect", path: "/dashboard" } };
 }
 
 export async function signOutAction(): Promise<ActionResult> {
   const { session } = await validateRequest();
   if (!session) {
-    return {
-      error: "Unauthorized",
-    };
+    return { success: false, error: "Unauthorized" };
   }
 
   await lucia.invalidateSession(session.id);
@@ -110,7 +127,7 @@ export async function updateUser(
   formData: FormData,
 ): Promise<ActionResult & { success?: boolean }> {
   const { session } = await getUserAuth();
-  if (!session) return { error: "Unauthorised" };
+  if (!session) return { success: false, error: "Unauthorised" };
 
   const name = formData.get("name") ?? undefined;
   const email = formData.get("email") ?? undefined;
@@ -119,10 +136,12 @@ export async function updateUser(
 
   if (!result.success) {
     const error = result.error.flatten().fieldErrors;
-    if (error.name) return { error: "Invalid name - " + error.name[0] };
-    if (error.email) return { error: "Invalid email - " + error.email[0] };
+    if (error.name)
+      return { success: false, error: "Invalid name - " + error.name[0] };
+    if (error.email)
+      return { success: false, error: "Invalid email - " + error.email[0] };
     console.error(3);
-    return genericError;
+    return genericError();
   }
 
   try {
@@ -131,9 +150,9 @@ export async function updateUser(
       .set({ ...result.data })
       .where(eq(users.id, session.user.id));
     revalidatePath("/account");
-    return { success: true, error: "" };
+    return { success: false, error: "" };
   } catch (e) {
     console.error(4, e);
-    return genericError;
+    return genericError(e);
   }
 }

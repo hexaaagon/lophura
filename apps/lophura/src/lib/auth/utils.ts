@@ -4,7 +4,11 @@ import { cookies } from "next/headers";
 import { type Cookie } from "lucia";
 
 import { validateRequest } from "./lucia";
-import { UsernameAndPassword, authenticationSchema } from "../db/schema/auth";
+import {
+  authenticationRegisterSchema,
+  authenticationSchema,
+} from "../db/schema";
+import { z } from "zod";
 
 export type AuthSession = {
   session: {
@@ -35,7 +39,12 @@ export const checkAuth = async () => {
   if (!session) redirect("/");
 };
 
-export const genericError = { error: "Error, please try again." };
+export const genericError = (e?: any) => {
+  return {
+    success: false,
+    error: `Error, ${e instanceof Error ? e.message : "please try again later."}`,
+  } as { success: false; error: string };
+};
 
 export const setAuthCookie = async (cookie: Cookie) => {
   const cookieStore = await cookies();
@@ -46,17 +55,42 @@ export const setAuthCookie = async (cookie: Cookie) => {
 const getErrorMessage = (errors: any): string => {
   if (errors.email) return "Invalid Email";
   if (errors.password) return "Invalid Password - " + errors.password[0];
+  if (errors.passwordConfirm) return errors.passwordConfirm[0];
   return ""; // return a default error message or an empty string
 };
 
-export const validateAuthFormData = (
+export const validateAuthLoginFormData = (
   formData: FormData,
 ):
-  | { data: UsernameAndPassword; error: null }
+  | { data: z.infer<typeof authenticationSchema>; error: null }
   | { data: null; error: string } => {
   const email = formData.get("email");
   const password = formData.get("password");
   const result = authenticationSchema.safeParse({ email, password });
+
+  if (!result.success) {
+    return {
+      data: null,
+      error: getErrorMessage(result.error.flatten().fieldErrors),
+    };
+  }
+
+  return { data: result.data, error: null };
+};
+
+export const validateAuthRegisterFormData = (
+  formData: FormData,
+):
+  | { data: z.infer<typeof authenticationRegisterSchema>; error: null }
+  | { data: null; error: string } => {
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const passwordConfirm = formData.get("passwordConfirm");
+  const result = authenticationRegisterSchema.safeParse({
+    email,
+    password,
+    passwordConfirm,
+  });
 
   if (!result.success) {
     return {

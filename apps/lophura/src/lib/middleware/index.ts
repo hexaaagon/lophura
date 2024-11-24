@@ -1,5 +1,6 @@
+"use server";
 import { NextRequest, NextResponse } from "next/server";
-import { authMiddleware } from "./auth";
+import { authMiddleware } from "@/lib/middleware/auth";
 
 export type middlewareFunc = (
   req: NextRequest,

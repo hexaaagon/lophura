@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { appRouter } from "@/lib/server/routers/_app";
 import { createTRPCContext } from "@/lib/trpc/context";
 import { env } from "@/lib/env.mjs";
+import { ServerRuntime } from "next";
 
 const createContext = async (req: NextRequest) => {
   return createTRPCContext({
