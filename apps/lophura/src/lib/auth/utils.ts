@@ -20,7 +20,7 @@ export type AuthSession = {
     };
   } | null;
 };
-export const getUserAuth = async (): Promise<AuthSession> => {
+export const getUser = async (): Promise<AuthSession> => {
   const { session, user } = await validateRequest();
   if (!session) return { session: null };
   return {
@@ -100,4 +100,13 @@ export const validateAuthRegisterFormData = (
   }
 
   return { data: result.data, error: null };
+};
+
+export const getUserAvatar = async (userEmail: string) => {
+  const hash = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(userEmail),
+  );
+
+  return `https://www.gravatar.com/avatar/${Buffer.from(hash).toString("hex")}?d=404`;
 };

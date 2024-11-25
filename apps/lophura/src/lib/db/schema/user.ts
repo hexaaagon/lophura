@@ -11,21 +11,20 @@ export const users = sqliteTable("user", {
   email: text("email").notNull().unique(),
   hashedPassword: text("hashed_password").notNull(),
   name: text("name"),
+  permission: text("permission")
+    .notNull()
+    .$type<"admin" | "write-read" | "read-only">(),
 });
 
-const createSchema = createInsertSchema(users, {
-  id: z.string(),
-  email: z.string().email(),
-  hashedPassword: z.string(),
-  name: z.string().optional(),
-});
+export type PublicUser = Omit<typeof users.$inferSelect, "hashedPassword"> & {
+  hashedPassword?: string;
+};
 
 export const authenticationSchema = z.object({
   email: z.string().email().min(5).max(64),
   password: z
     .string()
-    .min(4, { message: "must be at least 4 characters long" })
-    .max(15, { message: "cannot be more than 15 characters long" }),
+    .min(4, { message: "must be at least 4 characters long" }),
 });
 
 export const authenticationRegisterSchema = z
@@ -33,12 +32,10 @@ export const authenticationRegisterSchema = z
     email: z.string().email().min(5).max(64),
     password: z
       .string()
-      .min(4, { message: "must be at least 4 characters long" })
-      .max(15, { message: "cannot be more than 15 characters long" }),
+      .min(4, { message: "must be at least 4 characters long" }),
     passwordConfirm: z
       .string()
-      .min(4, { message: "must be at least 4 characters long" })
-      .max(15, { message: "cannot be more than 15 characters long" }),
+      .min(4, { message: "must be at least 4 characters long" }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: "Passwords do not match",

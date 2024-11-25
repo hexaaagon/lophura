@@ -30,7 +30,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { authenticationSchema } from "@/lib/db/schema";
-import EventEmitter from "node:events";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const [state, formAction, isPending] = useActionState(signInAction, {
@@ -38,9 +38,15 @@ export default function SignInPage() {
     error: "",
   });
 
+  const router = useRouter();
+
   useEffect(() => {
     if (!state.success && state.error)
-      toast.error(state.error, { duration: 2000 });
+      toast.error("Error", { duration: 10000, description: state.error });
+    if (state.success) {
+      // toast.success("Signed in", { duration: 2000 });
+      router.push("/home");
+    }
   }, [state]);
 
   const form = useForm<z.infer<typeof authenticationSchema>>();
@@ -54,14 +60,14 @@ export default function SignInPage() {
               src="/static/images/icons/lophura-text-dark.svg"
               alt="Lophura"
               width={100}
-              height={100}
+              height={26}
               className="mb-2 block dark:hidden"
             />
             <Image
               src="/static/images/icons/lophura-text-light.svg"
               alt="Lophura"
               width={100}
-              height={100}
+              height={26}
               className="mb-2 hidden dark:block"
             />
           </div>

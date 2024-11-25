@@ -12,6 +12,15 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   // transpilePackages: ["@lophura/server"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "gravatar.com",
+        pathname: "/avatar/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

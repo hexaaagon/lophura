@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useActionState, useEffect } from "react";
@@ -39,9 +40,15 @@ export default function SignUpPage() {
     error: "",
   });
 
+  const router = useRouter();
+
   useEffect(() => {
     if (!state.success && state.error)
-      toast.error(state.error, { duration: 2000 });
+      toast.error("Error", { duration: 2000, description: state.error });
+    if (state.success) {
+      // toast.success("Signed up", { duration: 2000 });
+      router.push("/home");
+    }
   }, [state]);
 
   const form = useForm<z.infer<typeof authenticationRegisterSchema>>();
@@ -55,14 +62,14 @@ export default function SignUpPage() {
               src="/static/images/icons/lophura-text-dark.svg"
               alt="Lophura"
               width={100}
-              height={100}
+              height={26}
               className="mb-2 block dark:hidden"
             />
             <Image
               src="/static/images/icons/lophura-text-light.svg"
               alt="Lophura"
               width={100}
-              height={100}
+              height={26}
               className="mb-2 hidden dark:block"
             />
           </div>

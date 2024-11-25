@@ -5,6 +5,7 @@ import { api } from "../trpc/api";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import type { User as LuciaUser, Session as LuciaSession } from "lucia";
 import { Argon2id } from "oslo/password";
 import { lucia, validateRequest } from "../auth/lucia";
 import { nanoid } from "@/lib/utils";
@@ -15,20 +16,46 @@ import {
   genericError,
   setAuthCookie,
   validateAuthLoginFormData,
-  getUserAuth,
+  getUser,
   validateAuthRegisterFormData,
+  AuthSession,
 } from "../auth/utils";
-import { users, updateUserSchema } from "../db/schema";
+import { users, updateUserSchema, PublicUser } from "../db/schema";
 
 type ActionResult =
   | {
       success: true;
-      data: {
-        type: "redirect";
-        path: string;
-      };
+      data:
+        | {
+            type: "redirect";
+            path: string;
+          }
+        | true;
     }
   | { success: false; error: string };
+
+export type User = {
+  user: PublicUser;
+  auth: LuciaUser;
+  session: LuciaSession;
+} | null;
+
+export async function getUserData(): Promise<User> {
+  const auth = await validateRequest();
+  if (!auth.session) return null;
+  const [userdb] = (await db
+    .select()
+    .from(users)
+    .where(eq(users.id, auth.user.id))) as unknown as [PublicUser];
+
+  delete userdb.hashedPassword;
+
+  return {
+    user: userdb,
+    auth: auth.user,
+    session: auth.session,
+  };
+}
 
 export async function signInAction(
   _: ActionResult,
@@ -64,7 +91,7 @@ export async function signInAction(
     const sessionCookie = lucia.createSessionCookie(session.id);
     await setAuthCookie(sessionCookie);
 
-    return { success: true, data: { type: "redirect", path: "/dashboard" } };
+    return { success: true, data: { type: "redirect", path: "/home" } };
   } catch (e) {
     console.error(1, e);
 
@@ -79,7 +106,7 @@ export async function signUpAction(
   const { data, error } = validateAuthRegisterFormData(formData);
   if (error !== null) return { success: false, error };
 
-  const isFirstInstall = (await api.auth.getUserCount.query()) === 0;
+  const isFirstInstall = (await api.auth.getUserCount.mutate()) === 0;
   if (!isFirstInstall) {
     return {
       success: false,
@@ -96,6 +123,7 @@ export async function signUpAction(
       id: userId,
       email: data.email,
       hashedPassword,
+      permission: "admin",
     });
   } catch (e) {
     console.error(2, e);
@@ -106,7 +134,7 @@ export async function signUpAction(
   const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
   await setAuthCookie(sessionCookie);
-  return { success: true, data: { type: "redirect", path: "/dashboard" } };
+  return { success: true, data: { type: "redirect", path: "/home" } };
 }
 
 export async function signOutAction(): Promise<ActionResult> {
@@ -125,8 +153,8 @@ export async function signOutAction(): Promise<ActionResult> {
 export async function updateUser(
   _: any,
   formData: FormData,
-): Promise<ActionResult & { success?: boolean }> {
-  const { session } = await getUserAuth();
+): Promise<ActionResult> {
+  const { session } = await getUser();
   if (!session) return { success: false, error: "Unauthorised" };
 
   const name = formData.get("name") ?? undefined;
@@ -150,7 +178,7 @@ export async function updateUser(
       .set({ ...result.data })
       .where(eq(users.id, session.user.id));
     revalidatePath("/account");
-    return { success: false, error: "" };
+    return { success: true, data: true };
   } catch (e) {
     console.error(4, e);
     return genericError(e);

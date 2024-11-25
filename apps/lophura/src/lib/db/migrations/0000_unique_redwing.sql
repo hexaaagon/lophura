@@ -9,7 +9,8 @@ CREATE TABLE `user` (
 	`id` text PRIMARY KEY NOT NULL,
 	`email` text NOT NULL,
 	`hashed_password` text NOT NULL,
-	`name` text
+	`name` text,
+	`permission` text NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);

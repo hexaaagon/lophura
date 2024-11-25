@@ -63,6 +63,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.36.3",
     "drizzle-zod": "^0.5.1",
+    "easy-peasy": "^6.0.5",
     "embla-carousel-react": "^8.4.0",
     "esbuild": "^0.24.0",
     "input-otp": "^1.4.1",
