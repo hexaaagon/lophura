@@ -19,6 +19,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useStoreState } from "easy-peasy";
+import { store, StoreActions, StoreType } from "@/lib/store";
 
 export function NavMain({
   items,
@@ -34,12 +36,30 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const mainStore = useStoreState(
+    (state: StoreType) => state.sidebarMenusOpened,
+  );
+  const storeActions = store.getActions() as StoreActions;
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
+          <Collapsible
+            key={item.title}
+            asChild
+            onOpenChange={() => {
+              (
+                (store.getState() as StoreType).sidebarMenusOpened || []
+              ).includes(item.title)
+                ? storeActions.removeSidebarMenuOpened(item.title)
+                : storeActions.addSidebarMenuOpened(item.title);
+
+              console.log("clicked");
+            }}
+            open={mainStore?.includes(item.title)}
+          >
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
                 <Link href={item.url}>

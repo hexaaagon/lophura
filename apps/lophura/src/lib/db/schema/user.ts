@@ -10,7 +10,7 @@ export const users = sqliteTable("user", {
     .$defaultFn(() => nanoid(15)),
   email: text("email").notNull().unique(),
   hashedPassword: text("hashed_password").notNull(),
-  name: text("name"),
+  name: text("name").default("User"),
   permission: text("permission")
     .notNull()
     .$type<"admin" | "write-read" | "read-only">(),

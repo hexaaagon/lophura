@@ -16,13 +16,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 import { version } from "#/package.json";
-import { useStoreState } from "easy-peasy";
-import { StoreType } from "@/lib/store";
 
-const data = {
+const navigation = {
   navMain: [
     {
       title: "Home",
@@ -30,7 +29,7 @@ const data = {
       icon: Lucide.Home,
     },
     {
-      title: "Workspaces",
+      title: "Workspace",
       url: "/workspace",
       icon: Lucide.HardDrive,
       items: [
@@ -85,8 +84,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useStoreState((state: StoreType) => state.user!);
-
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -119,8 +116,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navigation.navMain} />
+        <NavSecondary items={navigation.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
