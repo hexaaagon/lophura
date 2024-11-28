@@ -7,6 +7,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
 import {
@@ -18,6 +19,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import { useIsMobile } from "@/lib/hooks/use-mobile";
 
 export const staticRouteInfo: [
   /** @name Name */ string,
@@ -36,15 +38,20 @@ export const staticRouteInfo: [
 
 export default function AppTemplate({ children }: ComponentProps<"div">) {
   const pathname = usePathname();
+  const isMobile = useIsMobile();
 
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="px-4">
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
+            {isMobile && (
+              <>
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+              </>
+            )}
             <Breadcrumb>
               <BreadcrumbList>
                 {staticRouteInfo.reduce((acc, [name, href]) => {

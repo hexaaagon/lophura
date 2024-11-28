@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function NavUser() {
+export function NavUser({ desktop = false }: { desktop?: boolean }) {
   const user = useStoreState((state: StoreType) => state.user!);
   const avatar = trpc.auth.getAvatar.useQuery();
   const utils = trpc.useUtils();
@@ -60,7 +60,7 @@ export function NavUser() {
   );
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className={`pb-4 ${desktop ? "px-4" : ""}`}>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
