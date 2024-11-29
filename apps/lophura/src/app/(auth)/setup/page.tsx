@@ -1,14 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
-import { signUpAction } from "@/lib/actions/users";
+import { store, StoreActions } from "@/lib/store";
+import { getUserData, signUpAction } from "@/lib/actions/users";
 
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +45,16 @@ export default function SignUpPage() {
     if (!state.success && state.error)
       toast.error("Error", { duration: 2000, description: state.error });
     if (state.success) {
-      // toast.success("Signed up", { duration: 2000 });
+      toast.success("Signed up", { duration: 2000 });
+      if (!store.getState().user) {
+        getUserData().then((res): void => {
+          const storeActions = store.getActions() as StoreActions;
+
+          res?.user && storeActions.setUser(res.user);
+          res?.auth && storeActions.setAuth(res.auth);
+          res?.session && storeActions.setSession(res.session);
+        });
+      }
       router.push("/home");
     }
   }, [state]);

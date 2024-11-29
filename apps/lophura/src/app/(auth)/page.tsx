@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 
-import { signInAction } from "@/lib/actions/users";
+import { store, StoreActions } from "@/lib/store";
+import { getUserData, signInAction } from "@/lib/actions/users";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,16 @@ export default function SignInPage() {
     if (!state.success && state.error)
       toast.error("Error", { duration: 10000, description: state.error });
     if (state.success) {
-      // toast.success("Signed in", { duration: 2000 });
+      toast.success("Signed in", { duration: 2000 });
+      if (!store.getState().user) {
+        getUserData().then((res): void => {
+          const storeActions = store.getActions() as StoreActions;
+
+          res?.user && storeActions.setUser(res.user);
+          res?.auth && storeActions.setAuth(res.auth);
+          res?.session && storeActions.setSession(res.session);
+        });
+      }
       router.push("/home");
     }
   }, [state]);
