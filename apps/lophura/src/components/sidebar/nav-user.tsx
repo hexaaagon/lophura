@@ -1,18 +1,23 @@
 "use client";
 
 import {
-  BadgeCheck,
-  Bell,
+  Check,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
+  Monitor,
+  Moon,
+  Settings,
   Sparkles,
+  Sun,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
 import { trpc } from "@/lib/trpc/client";
 import { useStoreState } from "easy-peasy";
 import { StoreType } from "@/lib/store";
+
+import { signOutAction } from "@/lib/actions/users";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -21,7 +26,12 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -37,6 +47,7 @@ export function NavUser({ desktop = false }: { desktop?: boolean }) {
   const avatar = trpc.auth.getAvatar.useQuery();
   const utils = trpc.useUtils();
 
+  const { setTheme, theme } = useTheme();
   const { isMobile } = useSidebar();
 
   useEffect(() => {
@@ -117,22 +128,48 @@ export function NavUser({ desktop = false }: { desktop?: boolean }) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <Settings />
+                Settings
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Sun className="block dark:hidden" />
+                  <Moon className="hidden dark:block" />
+                  Theme
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                      <div className="flex items-center gap-2">
+                        <Sun /> Light Mode
+                      </div>
+                      {theme === "light" && <Check />}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                      <div className="flex items-center gap-2">
+                        <Moon /> Dark Mode
+                      </div>
+                      {theme === "dark" && <Check />}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                      <div className="flex items-center gap-2">
+                        <Monitor />
+                        System
+                      </div>
+                      {theme === "system" && <Check />}
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOut />
-              Log out
+              <form action={signOutAction}>
+                <button className="flex items-center gap-2" type="submit">
+                  <LogOut />
+                  Log out
+                </button>
+              </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

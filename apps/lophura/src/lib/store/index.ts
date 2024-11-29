@@ -24,27 +24,6 @@ export const store = createStore(
     clearSession: action((state: StoreType) => {
       state.session = undefined;
     }),
-
-    sidebarMenusOpened: [],
-    addSidebarMenuOpened: action((state: StoreType, menu: string) => {
-      if (!state.sidebarMenusOpened) state.sidebarMenusOpened = [];
-      if (state.sidebarMenusOpened.includes(menu)) return;
-
-      state.sidebarMenusOpened.push(menu);
-    }),
-    removeSidebarMenuOpened: action((state: StoreType, menu: string) => {
-      if (!state.sidebarMenusOpened) {
-        state.sidebarMenusOpened = [];
-        return;
-      }
-
-      state.sidebarMenusOpened = state.sidebarMenusOpened.filter(
-        (m) => m !== menu,
-      );
-    }),
-    clearSidebarMenuOpened: action((state: StoreType) => {
-      state.sidebarMenusOpened = [];
-    }),
   } as StoreType & StoreActions,
   {
     name: "LophuraStore",
@@ -55,7 +34,6 @@ export interface StoreType {
   user?: PublicUser;
   auth?: LuciaUser;
   session?: LuciaSession;
-  sidebarMenusOpened?: string[];
 }
 
 export interface StoreActions {
@@ -67,8 +45,4 @@ export interface StoreActions {
 
   setSession: any;
   clearSession: any;
-
-  addSidebarMenuOpened: any;
-  removeSidebarMenuOpened: any;
-  clearSidebarMenuOpened: any;
 }
