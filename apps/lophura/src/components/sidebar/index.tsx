@@ -3,17 +3,13 @@
 import * as React from "react";
 import {
   ArchiveX,
-  Command,
-  File,
+  Construction,
   Files,
   FileText,
   FileVideo,
   House,
-  Inbox,
-  Send,
   Server,
   Trash,
-  Trash2,
 } from "lucide-react";
 
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -37,29 +33,67 @@ import { Switch } from "@/components/ui/switch";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+import { store, StoreActions, StoreType } from "@/lib/store";
+import { useStoreState } from "easy-peasy";
 
 // This is sample data
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+const data: {
+  navMain: {
+    title: string;
+    url: string;
+    icon: any;
+  }[];
+  navSecondary: {
+    [key: string]: {
+      name: string;
+      url: string;
+      icon: any;
+    }[];
+  };
+} = {
   navMain: [
     {
       title: "Home",
       url: "/home",
       icon: House,
-      isActive: true,
     },
     {
       title: "Workspace",
       url: "/workspace",
       icon: Server,
-      isActive: false,
     },
   ],
+  navSecondary: {
+    Home: [
+      {
+        name: "All Files",
+        url: "/home",
+        icon: Files,
+      },
+      {
+        name: "Photos & Media",
+        url: "/media",
+        icon: FileVideo,
+      },
+      {
+        name: "Documents",
+        url: "/documents",
+        icon: FileText,
+      },
+      {
+        name: "Archived",
+        url: "/archive",
+        icon: ArchiveX,
+      },
+      {
+        name: "Deleted Files",
+        url: "/trash",
+        icon: Trash,
+      },
+    ],
+  },
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -69,6 +103,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { setOpen, isMobile } = useSidebar();
 
   const router = useRouter();
+  const pathname = usePathname();
+
+  const currentRoute = useStoreState((state: StoreType) => state.currentRoute);
+
+  // Adds dynamic navigation
+  const secondaryNav: {
+    [key: string]: { name: string; url: string; icon: any }[];
+  } = {
+    Workspace: [
+      {
+        name: "Coming Soon!",
+        url: "/workspace",
+        icon: Construction,
+      },
+    ],
+    ...data.navSecondary,
+  };
 
   return (
     <Sidebar
@@ -128,6 +179,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       onClick={() => {
                         setActiveItem(item);
                         setOpen(true);
+                        (store.getActions() as StoreActions).setCurrentRoute(
+                          item.title,
+                        );
                         router.push(item.url);
                       }}
                       isActive={activeItem.title === item.title}
@@ -150,7 +204,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
             <div className="text-base font-medium text-foreground">
-              {activeItem.title}
+              {currentRoute}
             </div>
           </div>
         </SidebarHeader>
@@ -158,25 +212,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroup className="h-full px-0">
             <SidebarGroupContent className="flex flex-col">
               <div className="flex flex-col gap-1 px-4">
-                <Button
-                  variant="secondary"
-                  className="flex justify-start gap-2"
-                >
-                  <Files />
-                  <span>All Files</span>
-                </Button>
-                <Button variant="ghost" className="flex justify-start gap-2">
-                  <FileVideo />
-                  <span>Photos & Media</span>
-                </Button>
-                <Button variant="ghost" className="flex justify-start gap-2">
-                  <FileText />
-                  <span>Documents</span>
-                </Button>
-                <Button variant="ghost" className="flex justify-start gap-2">
-                  <Trash />
-                  <span>Deleted Files</span>
-                </Button>
+                {secondaryNav[(currentRoute! as string) || "Home"]?.map(
+                  (item) => (
+                    <Button
+                      key={item.name}
+                      variant={
+                        pathname.startsWith(item.url) ? "secondary" : "ghost"
+                      }
+                      className="flex justify-start gap-2"
+                      onClick={() => {
+                        router.push(item.url);
+                      }}
+                    >
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </Button>
+                  ),
+                )}
               </div>
               <footer className="absolute bottom-0 w-full">
                 <NavUser desktop />
