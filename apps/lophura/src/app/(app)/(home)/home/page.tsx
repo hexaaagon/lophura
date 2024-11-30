@@ -1,15 +1,8 @@
 "use client";
-import { useMemo } from "react";
-
-import SignOutBtn from "@/components/auth/SignOutBtn";
-
 import { StoreType } from "@/lib/store";
 import { useStoreState } from "easy-peasy";
 
-import { trpc } from "@/lib/trpc/client";
-
 export default function Home() {
-  const computer = trpc.computers.getComputers.useQuery();
   const data = useStoreState((state: StoreType) => state);
 
   return (
@@ -18,10 +11,6 @@ export default function Home() {
       <pre className="my-2 rounded-lg bg-secondary p-4">
         {JSON.stringify(data, null, 2)}
       </pre>
-      <pre className="my-2 rounded-lg bg-secondary p-4">
-        {JSON.stringify(computer, null, 2)}
-      </pre>
-      <SignOutBtn />
     </main>
   );
 }
