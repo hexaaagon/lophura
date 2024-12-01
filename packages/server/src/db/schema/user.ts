@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { nanoid } from "@/lib/utils";
+import { nanoid } from "../../utils";
 
 export const users = sqliteTable("user", {
   id: text("id")

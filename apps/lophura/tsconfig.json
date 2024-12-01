@@ -21,7 +21,10 @@
     "paths": {
       "@/*": ["./src/*"],
       "~/*": ["./*"],
-      "#/*": ["../../*"]
+      "#/*": ["../../*"],
+
+      "@lophura/file-system/*": ["../../packages/file-system/src/*"],
+      "@lophura/server/*": ["../../packages/server/src/*"]
     },
     "baseUrl": "./"
   },

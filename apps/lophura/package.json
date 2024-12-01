@@ -1,13 +1,13 @@
 {
   "name": "lophura",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
+    "start": "node -r dotenv/config dist/server.mjs",
     "dev": "next dev --turbopack",
     "build": "npm run build-server && npm run build-next",
     "build-server": "tsx esbuild.config.ts",
     "build-next": "next build",
-    "start": "node -r dotenv/config dist/server.mjs",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/lib/db/migrate.ts",
@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@lophura/file-system": "workspace:*",
+    "@lophura/server": "workspace:*",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@node-rs/argon2": "^2.0.0",
     "@node-rs/bcrypt": "^1.10.5",
@@ -75,9 +77,9 @@
     "next-themes": "^0.4.3",
     "oslo": "^1.2.1",
     "prettier-plugin-tailwindcss": "^0.6.9",
-    "react": "19.0.0-rc-66855b96-20241106",
+    "react": "18.3.1",
     "react-day-picker": "8.10.1",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "18.3.1",
     "react-hook-form": "^7.53.2",
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.13.3",
@@ -100,6 +102,7 @@
     "eslint-config-next": "15.0.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.19.2",
     "typescript": "^5"
   }

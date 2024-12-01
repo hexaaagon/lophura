@@ -7,10 +7,12 @@
     "packages/*"
   ],
   "scripts": {
-    "lophura:start": "pnpm --filter=lophura run start",
-    "lophura:build": "pnpm --filter=lophura run build",
-    "server:build": "pnpm --filter=@lophura/server run build",
-    "start": "pnpm --filter=lophura run start",
+    "lophura:start": "pnpm --filter=lophura start",
+    "lophura:build": "turbo build --filter=lophura",
+    "server:build": "turbo build --filter=@lophura/server",
+    "file-system:build": "turbo build --filter=@lophura/file-system",
+    "packages:build": "turbo build --filter=@lophura/*",
+    "start": "pnpm --filter=lophura start",
     "build": "turbo build",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
