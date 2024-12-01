@@ -6,12 +6,14 @@
     "apps/*",
     "packages/*"
   ],
+  "license": "Apache-2.0",
   "scripts": {
     "lophura:start": "pnpm --filter=lophura start",
     "lophura:build": "turbo build --filter=lophura",
     "server:build": "turbo build --filter=@lophura/server",
     "file-system:build": "turbo build --filter=@lophura/file-system",
     "packages:build": "turbo build --filter=@lophura/*",
+    "db:migrate": "pnpm --filter=lophura db:migrate",
     "start": "pnpm --filter=lophura start",
     "build": "turbo build",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
