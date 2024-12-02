@@ -24,5 +24,44 @@ To get started, you need to install [Node.js](https://nodejs.org/en/download/) (
 1. Clone the repository and change directory: `git clone https://github.com/hexaaagon/lophura.git && cd lophura`
 2. Install dependencies: `pnpm install`
 3. Build Lophura: `pnpm build`
+   
+  <details>
+  <summary> Windows User? </summary>
+
+  Change the following files to make this work for you!
+
+  **packages/server/package.json:**
+  <details>
+  <summary>Code</summary>
+
+  ```json
+  "scripts": {
+    "build": "npm run switch:prod && node -e \"require('fs').rmSync('./dist', { recursive: true, force: true });\" && tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
+    "switch:dev": "node ../server/scripts/switchToSrc.js",
+    "switch:prod": "node ../server/scripts/switchToDist.js",
+    "dev": "node -e \"require('fs').rmSync('./dist', { recursive: true, force: true });\" && pnpm esbuild && tsc --emitDeclarationOnly --outDir dist -p tsconfig.server.json",
+    "esbuild": "tsx ./esbuild.config.ts && tsc --project tsconfig.server.json --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit"
+  },
+  ```
+  </details>
+
+  **packages/file-system/package.json:**
+  <details>
+  <summary>Code</summary>
+
+  ```json
+  "scripts": {
+    "build": "npm run switch:prod && node -e \"require('fs').rmSync('./dist', { recursive: true, force: true });\" && tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
+    "switch:dev": "node ../server/scripts/switchToSrc.js",
+    "switch:prod": "node ../server/scripts/switchToDist.js",
+    "dev": "node -e \"require('fs').rmSync('./dist', { recursive: true, force: true });\" && pnpm esbuild && tsc --emitDeclarationOnly --outDir dist -p tsconfig.server.json",
+    "esbuild": "tsx ./esbuild.config.ts && tsc --project tsconfig.server.json --emitDeclarationOnly",
+    "typecheck": "tsc --noEmit"
+  },
+  ```
+  </details>
+  </details>
+
 4. Migrate database: `pnpm db:migrate`
 5. Start Lophura: `pnpm start`
