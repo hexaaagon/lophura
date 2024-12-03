@@ -6,7 +6,6 @@ We have a few guidelines to help you get started in this project:
 
 - [Commit Convention](#commit-convention)
 - [Setup](#setup)
-- [Build](#build)
 - [Pull Request](#pull-request)
 
 ## Commit Convention
