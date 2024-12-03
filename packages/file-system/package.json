@@ -20,23 +20,16 @@
     "./dist": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs.js"
-    },
-    "./dist/db": {
-      "import": "./dist/db/index.js",
-      "require": "./dist/db/index.cjs.js"
-    },
-    "./dist/db/schema": {
-      "import": "./dist/db/schema/index.js",
-      "require": "./dist/db/schema/index.cjs.js"
     }
   },
   "scripts": {
-    "build": "npm run switch:prod && rm -rf ./dist && tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
+    "build": "npm run switch:prod && pnpm cleanup && tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
     "switch:dev": "node scripts/switchToSrc.js",
     "switch:prod": "node scripts/switchToDist.js",
-    "dev": "rm -rf ./dist && pnpm esbuild && tsc --emitDeclarationOnly --outDir dist -p tsconfig.server.json",
+    "dev": "pnpm cleanup && pnpm esbuild && tsc --emitDeclarationOnly --outDir dist -p tsconfig.server.json",
     "esbuild": "tsx ./esbuild.config.ts && tsc --project tsconfig.server.json --emitDeclarationOnly",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cleanup": "node -e \"require('fs').rmSync('./dist', { recursive: true, force: true });\""
   },
   "devDependencies": {
     "@types/node": "^20.17.6",
