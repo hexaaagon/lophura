@@ -10,13 +10,22 @@
   "scripts": {
     "lophura:start": "pnpm --filter=lophura run start",
     "lophura:build": "turbo build --filter=lophura",
+    "lophura:dev": "pnpm --filter=lophura run dev",
     "lophura:setup": "pnpm --filter=lophura run setup",
     "packages:build": "turbo build --filter=@lophura/*",
+    "packages:script": "pnpm --filter=@lophura/* run switch:dev",
     "build": "turbo build",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo typecheck"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/node": "^22.10.1",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.24.0",
     "prettier": "^3.2.5",
+    "tsx": "^4.19.2",
     "turbo": "^2.3.0",
     "typescript": "5.5.4"
   },
