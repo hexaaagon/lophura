@@ -1,1 +1,3 @@
-export const foo = "bar";
+export * from "./constants/index";
+
+export * from "./setup/index";

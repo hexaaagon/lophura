@@ -25,16 +25,7 @@
       "@lophura/server/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "./src/**/*.ts", "*.config.ts"],
 
-  "exclude": [
-    "tsup.ts",
-    "node_modules",
-    "dokploy",
-    "config",
-    "dist",
-    "webpack.config.server.js",
-    "migration.ts",
-    "setup.ts"
-  ]
+  "include": ["next-env.d.ts", "./src/**/*.ts"],
+  "exclude": ["tsup.ts", "node_modules", "config", "dist"]
 }
