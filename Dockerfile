@@ -9,7 +9,7 @@ WORKDIR /app
 
 # RUN apt update && apt install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 ENV NODE_ENV=production
 RUN pnpm run build
