@@ -15,7 +15,6 @@ ENV NODE_ENV=production
 RUN pnpm run build
 
 EXPOSE 3000
-VOLUME [ "/etc/lophura" ]
 
 ENTRYPOINT [ "/bin/sh", "./docker/entrypoint.sh" ]
 CMD [ "pnpm", "run", "lophura:start" ]
