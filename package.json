@@ -16,7 +16,7 @@
     "packages:script": "pnpm --filter=@lophura/* run switch:dev",
     "build": "turbo build",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
