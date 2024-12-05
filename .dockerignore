@@ -1,5 +1,6 @@
-node_modules
-dist
+**/node_modules/
+**/dist
+**/.next
 .gitignore
 .git
 *.md
