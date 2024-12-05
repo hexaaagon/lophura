@@ -2,7 +2,7 @@
 
 echo "$NODE_ENV"
 
-if [ -d /etc/lophura ]; then
+if [ -d /etc/lophura/workspaces ]; then
   echo "Lophura data exist."
 else
   echo "Initializing Lophura."
