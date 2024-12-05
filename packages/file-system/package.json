@@ -20,6 +20,10 @@
     "typecheck": "tsc --noEmit",
     "cleanup": "node -e \"require('fs').rmSync('./dist', { recursive: true, force: true });\""
   },
+  "dependencies": {
+    "@lophura/server": "workspace:*",
+    "fs-extra": "^11.2.0"
+  },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.17.6",
@@ -27,8 +31,5 @@
     "esbuild-plugin-alias": "^0.2.1",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.2"
-  },
-  "dependencies": {
-    "fs-extra": "^11.2.0"
   }
 }

@@ -1,3 +1,3 @@
 export * from "./constants/index";
 
-export * from "./setup/index";
+export * from "./setup/initiliaze";

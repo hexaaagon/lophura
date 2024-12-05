@@ -1,4 +1,4 @@
-import { setupDirectories } from "@lophura/file-system/setup";
+import { setupDirectories } from "@lophura/file-system";
 
 (async () => {
   try {
