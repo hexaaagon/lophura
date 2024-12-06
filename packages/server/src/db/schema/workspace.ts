@@ -3,10 +3,7 @@ import { nanoid } from "nanoid";
 import { users } from "./user";
 
 export const workspaces = sqliteTable("workspace", {
-  id: text("id")
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => nanoid(8)),
+  id: text("id").notNull().primaryKey(),
   path: text("path").notNull(),
   name: text("name").notNull(),
   createdBy: text("created_by")
