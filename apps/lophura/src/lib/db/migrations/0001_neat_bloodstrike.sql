@@ -6,6 +6,7 @@ CREATE TABLE `workspace_item` (
 	`created_at` integer NOT NULL,
 	`modified_at` integer NOT NULL,
 	`state` text DEFAULT 'open' NOT NULL,
+	`starred` text DEFAULT '[]' NOT NULL,
 	`info` text NOT NULL,
 	FOREIGN KEY (`workspace_id`) REFERENCES `workspace`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`created_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action

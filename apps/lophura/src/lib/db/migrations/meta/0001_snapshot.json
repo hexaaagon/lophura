@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "78883c4f-e646-4e08-a491-363f769df442",
+  "id": "9724990d-7df6-4fd5-b48d-b35915feaa94",
   "prevId": "ae62bffd-d1eb-46ae-974d-1066798d71e6",
   "tables": {
     "session": {
@@ -155,6 +155,14 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'open'"
+        },
+        "starred": {
+          "name": "starred",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "info": {
           "name": "info",

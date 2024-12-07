@@ -30,6 +30,10 @@ export const workspaceItems = sqliteTable("workspace_item", {
     .notNull()
     .$defaultFn(() => new Date()),
   state: text("state").notNull().default("open").$type<"open" | "trash">(),
+  starred: text("starred", { mode: "json" })
+    .notNull()
+    .default([])
+    .$type<string[]>(),
 
   info: text("info", { mode: "json" }).notNull().$type<
     | {
