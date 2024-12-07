@@ -3,6 +3,7 @@ import fs from "fs-extra";
 
 import { paths } from "../constants";
 import { ReturnFunction } from "../types";
+import { workspacePath } from "../utils";
 
 import { eq } from "drizzle-orm";
 import {
@@ -37,16 +38,17 @@ export async function setupWorkspace({
     };
 
   const id = nanoid(15);
+  const pathWorkspace = workspacePath(id);
 
   try {
+    await fs.mkdir(path.join(pathWorkspace, id));
+
     await db.insert(dbWorkspaces).values({
       id,
       name,
-      path: path.join(WORKSPACES_PATH, id),
-      createdBy: createdBy,
+      path: pathWorkspace,
+      createdBy,
     });
-
-    await fs.mkdir(path.join(WORKSPACES_PATH, id));
   } catch (e: any) {
     console.error(e);
     return {
