@@ -300,6 +300,9 @@ importers:
       '@lophura/server':
         specifier: workspace:*
         version: link:../server
+      drizzle-orm:
+        specifier: ^0.36.3
+        version: 0.36.3(@libsql/client@0.14.0)(@types/better-sqlite3@7.6.12)(@types/react@18.3.1)(better-sqlite3@11.5.0)(react@18.3.1)
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0

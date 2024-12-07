@@ -8,6 +8,13 @@
       "when": 1732614391207,
       "tag": "0000_living_lady_ursula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1733559681812,
+      "tag": "0001_neat_bloodstrike",
+      "breakpoints": true
     }
   ]
 }
