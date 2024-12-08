@@ -16,6 +16,10 @@ export const workspaces = sqliteTable("workspace", {
 
 export const workspaceItems = sqliteTable("workspace_item", {
   name: text("name").notNull().primaryKey(),
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => nanoid(5)),
   workspaceId: text("workspace_id")
     .notNull()
     .references(() => workspaces.id),

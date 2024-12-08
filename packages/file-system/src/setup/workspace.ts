@@ -2,7 +2,7 @@ import path from "node:path";
 import fs from "fs-extra";
 
 import { paths } from "../constants";
-import { ReturnFunction } from "../types";
+import { FunctionReturn } from "../types";
 import { workspacePath } from "../utils";
 
 import { eq } from "drizzle-orm";
@@ -19,7 +19,7 @@ export async function setupWorkspace({
 }: {
   name: string;
   createdBy: string;
-}): ReturnFunction {
+}): FunctionReturn {
   const { WORKSPACES_PATH } = paths();
 
   if (!fs.existsSync(WORKSPACES_PATH)) {

@@ -1,4 +1,4 @@
-export type ReturnFunction<T = any> = Promise<
+export type FunctionReturn<T = any> = Promise<
   | {
       success: true;
       data?: T;
