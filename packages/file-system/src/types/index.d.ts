@@ -1,6 +1,7 @@
-export type ReturnFunction = Promise<
+export type FunctionReturn<T = any> = Promise<
   | {
       success: true;
+      data?: T;
     }
   | {
       success: false;
