@@ -2,6 +2,8 @@
 
 echo "$NODE_ENV"
 
+pnpm i -r
+
 if [ -d /etc/lophura/workspaces ]; then
   echo "Lophura data exist."
 else
